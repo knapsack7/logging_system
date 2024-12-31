@@ -1,32 +1,45 @@
-# Makefile for Multithreaded Logging System
+# Multithreaded Logging System
 
-# Compiler and flags
-CXX = g++
-CXXFLAGS = -std=c++17 -Wall -Wextra -pthread
+This project implements a multithreaded logging system in C++. The logger handles log messages from multiple threads and ensures that they are logged in a thread-safe manner.
 
-# Target executable
-TARGET = logger
+## Features
 
-# Source files
-SRCS = main.cpp logger.cpp
-OBJS = $(SRCS:.cpp=.o)
+- Thread-safe logging: Uses mutexes and condition variables to manage concurrent access to log messages.
+- Supports multiple threads logging simultaneously.
+- Simple and efficient logging to the console.
 
-# Include directories (if any)
-INCLUDES = -I.
+## Design Patterns Used
 
-# Build the target
-all: $(TARGET)
+1. **Singleton Design Pattern**:
+   - Ensures only one instance of the Logger exists throughout the application.
 
-$(TARGET): $(OBJS)
-	$(CXX) $(CXXFLAGS) $(OBJS) -o $(TARGET)
+2. **Thread-Safe Logging**:
+   - A mutex protects access to the log queue.
+   - The worker thread processes logs from the queue and writes them to the file.
 
-%.o: %.cpp
-	$(CXX) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
+3. **Producer-Consumer Model**:
+   - Main threads (producers) add log messages to the queue.
+   - The worker thread (consumer) processes messages from the queue.
 
-# Clean up generated files
-clean:
-	rm -f $(OBJS) $(TARGET)
+4. **Graceful Shutdown**:
+   - The `stop()` method ensures all logs are processed before shutting down.
 
-# Run the program
-run: $(TARGET)
-	./$(TARGET)
+## Files Included
+
+- `main.cpp`: Contains the implementation of the logger and the main function that demonstrates its usage.
+- `Makefile`: Used for compiling the project.
+
+## How to Build and Run
+
+### Prerequisites
+
+Ensure you have a C++ compiler (like g++) installed on your machine. This project uses C++17 standards.
+
+### Build the Project
+
+1. Open a terminal.
+2. Navigate to the project directory.
+3. Run the following command to compile the project:
+
+   ```bash
+   make
