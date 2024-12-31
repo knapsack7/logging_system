@@ -4,7 +4,7 @@
 void workerFunction(int threadId) {
     Logger& logger = Logger::getInstance();
     for (int i = 0; i < 10; ++i) {
-        logger.log(INFO, "Thread " + std::to_string(threadId) + " is logging message " + std::to_string(i));
+        logger.log(INFO, "Logger Thread " + std::to_string(threadId) + " is logging message " + std::to_string(i));
     }
 }
 
