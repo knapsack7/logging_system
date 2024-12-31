@@ -24,6 +24,22 @@ This is a **Multithreaded Logging System** implemented in C++. The system effici
 - Adjustable log levels: `INFO`, `DEBUG`, `WARN`, `ERROR`.
 - Logs are written to a file or console.
 
+## Design Patterns Used
+
+1. **Singleton Design Pattern**:
+   - Ensures only one instance of the Logger exists throughout the application.
+
+2. **Thread-Safe Logging**:
+   - A mutex protects access to the log queue.
+   - The worker thread processes logs from the queue and writes them to the file.
+
+3. **Producer-Consumer Model**:
+   - Main threads (producers) add log messages to the queue.
+   - The worker thread (consumer) processes messages from the queue.
+
+4. **Graceful Shutdown**:
+   - The `stop()` method ensures all logs are processed before shutting down.
+
 ---
 
 ## Requirements
