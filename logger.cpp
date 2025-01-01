@@ -24,7 +24,7 @@ Logger& Logger::getInstance() {
 
 // Constructor: Initializes variables and opens the log file
 Logger::Logger() : running(false) {
-    logFile.open("log.txt", std::ios::out | std::ios::app); // Open the log file in append mode
+    logFile.open("log.txt", std::ios::out | std::ios::trunc); // Open the log file in append mode
     if (!logFile.is_open()) {
         std::cerr << "Failed to open log file!" << std::endl;
     }

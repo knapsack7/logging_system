@@ -1,3 +1,7 @@
+//----------------------------------------------------------------------------------------
+// The #ifndef LOGGER_H directive to prevent multiple inclusions of the same header
+// file during compilation.
+//----------------------------------------------------------------------------------------
 #ifndef LOGGER_H
 #define LOGGER_H
 
@@ -18,9 +22,42 @@
 //
 // 4. Producer-Consumer Model:
 //    - Main threads (producers) add log messages to the queue.
-//    - The worker thread (consumer) processes messages from the queue.
+//    - The worker thread (consumer) processes messages from the queue. The 
+//    Producer:
+//       - The Threads, workerFunction() threads in main.cpp are producers.
+//       - These threads call the Logger::log() method to enqueue log messages into the
+//         logQueue.
+//    Consumer:
+//       - The Logger class internally creates a WorkerThread when the start() method
+//         is called.
+//       - This workerThread acts as a a consumer, continuously monitoring the logQueue
+//         for new log messages.
+//       - When a log message is found in the queue, the workerThread dequeues it and writes it
+//         to the log file.
 //
-// 5. Graceful Shutdown:
+// 5. Key Features of the Model:
+//        Queue-Based Communication:
+//          The logQueue acts as a shared resource between producers and the consumer.
+//          Producers (application threads) add log messages to the queue, and the consumer (worker thread)
+//          processes them.
+//        Synchronization:
+//          A mutex (queueMutex) ensures thread-safe access to the logQueue, preventing race conditions when
+//          multiple threads interact with the queue.
+//          A condition variable (condition) allows the workerThread to efficiently wait for new log messages
+//          without busy-waiting.
+//        Decoupling of Producers and Consumers:
+//          Producers can enqueue messages at any time without worrying about the file-writing process, as the
+//          consumer thread handles the process independently.
+// 6. Why use this model ?
+//        Efficiency:
+//          Producers (main threads) don't block while waiting for the log file to be written. They quickly
+//          enqueue the message and move on.
+//        Scalability:
+//          Multiple producers can simultaneously log messages, while a single consumer thread serially processes
+//          and writes them to ensure consistency.
+//        Thread Safety:
+//          The model ensures no conflicts between the threads accessing the shared logQueue.
+// 7. Graceful Shutdown:
 //    - The stop() method ensures all logs are processed before shutting down.
 //
 // Usage:
